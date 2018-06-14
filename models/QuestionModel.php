@@ -34,7 +34,6 @@
 
 class QuestionModel extends ObjectModel
 {
-    /** @var string Name */
     public $id_question;
     public $id_product;
     public $name;
@@ -44,15 +43,10 @@ class QuestionModel extends ObjectModel
     public $active;
     public $date_add;
 
-
-    /**
-     * @see ObjectModel::$definition
-     */
     public static $definition = array(
         'table' => 'question',
         'primary' => 'id_question',
         'fields' => array(
-            // Lang fields
             'id_question' => array('type' => self::TYPE_INT,'validate' => 'isUnsignedInt'),
             'id_product' =>  array('type' => self::TYPE_INT,'validate' => 'isInt'),
             'name' => 		 array('type' => self::TYPE_STRING,'validate' => 'isGenericName'),
@@ -61,33 +55,6 @@ class QuestionModel extends ObjectModel
             'answer' => 	 array('type' => self::TYPE_HTML,'validate' => 'isCleanHtml'),
             'active' => 	 array('type' => self::TYPE_INT,'validate' => 'isInt'),
             'date_add' => 	 array('type' => self::TYPE_DATE,'validate' => 'isDateFormat'),
-
         ),
     );
-
-    public function getAllQuestion()
-    {
-        global $cookie;
-        $id_lang = $cookie->id_lang;
-        $sql 	= "SELECT * FROM "._DB_PREFIX_."news AS n, "._DB_PREFIX_."news_lang AS nl WHERE n.id_news = nl.id_news AND nl.id_lang = $id_lang ORDER BY n.id_news DESC " ;
-        $db 	= Db::getInstance();
-        $array 	= $db->executeS($sql);
-
-        return $array;
-    }
-
-
-    public static function getQuestionById($id_news = null)
-    {
-        global $cookie;
-        $id_lang = ($cookie->id_lang != null) ? $cookie->id_lang : Configuration::get("PS_LANG_DEFAULT");
-
-        $sql 	= "SELECT * FROM "._DB_PREFIX_."news AS n, "._DB_PREFIX_."news_lang AS nl WHERE n.id_news = nl.id_news AND nl.id_lang = $id_lang AND n.id_news = $id_news " ;
-        $exec	= Db::getInstance()->getRow($sql);
-        if ($exec) {
-            return $exec;
-        } else {
-            Tools::redirectLink(__PS_BASE_URI__);
-        }
-    }
 }

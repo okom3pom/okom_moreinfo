@@ -61,7 +61,6 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
                 $return['errors'][] = $module_instance->l('Invalid email', 'default');
             }
 
-
             $moreinfo_question = strval(Tools::getValue('moreinfo_question'));
             if (!$moreinfo_question  || empty($moreinfo_question) || !Validate::isMessage($moreinfo_question)) {
                 $return['errors'][] = $module_instance->l('Invalid question', 'default');
@@ -73,7 +72,7 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
             }
 
             //Check if Captcha is enabled
-            if (Configuration::get('OKOM_MOREINFO_CAPTCHA') == 1) {
+            if (1 == Configuration::get('OKOM_MOREINFO_CAPTCHA')) {
                 $moreinfo_captcha = strval(Tools::getValue('ct_captcha'));
 
                 if (!class_exists('Securimage')) {
@@ -81,7 +80,7 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
                 }
                 $securimage = new Securimage();
 
-                if ($securimage->check($moreinfo_captcha) == false) {
+                if (false == $securimage->check($moreinfo_captcha)) {
                     $return['errors'][] = $module_instance->l('Incorrect security code entered', 'default');
                 }
             }
@@ -130,7 +129,6 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
                 $question->name = pSQL($moreinfo_firstname);
                 $question->approved = 0;
                 $question->date_add = date('Y-m-d');
-
                 $question->save();
             }
 
@@ -144,8 +142,8 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
 
 
             $faq_link = false;
-            if (Module::isEnabled('faq')  && Configuration::get('OKOM_MOREINFO_FAQ') == 1) {
-                $url = (Configuration::get("PS_REWRITING_SETTINGS") == 1 && $this->getMeta()!= false) ? $this->getMeta():'index.php?fc=module&module=faq&controller=default';
+            if (Module::isEnabled('faq')  && 1 == Configuration::get('OKOM_MOREINFO_FAQ')) {
+                $url = (1 == Configuration::get("PS_REWRITING_SETTINGS") && false!= $this->getMeta()) ? $this->getMeta():'index.php?fc=module&module=faq&controller=default';
                 $faq_link =  __PS_BASE_URI__.$url;
             }
 
@@ -155,7 +153,7 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
 
             $secure_image = false;
 
-            if (Configuration::get('OKOM_MOREINFO_CAPTCHA') == 1) {
+            if (1 == Configuration::get('OKOM_MOREINFO_CAPTCHA')) {
                 if (!class_exists('Securimage')) {
                     require_once dirname(__FILE__) . '/../../securimage/securimage.php';
                 }

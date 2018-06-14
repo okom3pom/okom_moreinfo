@@ -133,11 +133,10 @@ class okom_moreinfo extends Module
                 $output .= $this->displayError($this->l('Invalid email'));
             }
 
-            $OKOM_MOREINFO_ACTIVATE = intval(Tools::getValue('OKOM_MOREINFO_ACTIVATE'));
-            $OKOM_MOREINFO_FAQ = intval(Tools::getValue('OKOM_MOREINFO_FAQ'));
-            $OKOM_MOREINFO_CAPTCHA = intval(Tools::getValue('OKOM_MOREINFO_CAPTCHA'));
+            $OKOM_MOREINFO_ACTIVATE = (int)Tools::getValue('OKOM_MOREINFO_ACTIVATE');
+            $OKOM_MOREINFO_FAQ = (int)Tools::getValue('OKOM_MOREINFO_FAQ');
+            $OKOM_MOREINFO_CAPTCHA = (int)Tools::getValue('OKOM_MOREINFO_CAPTCHA');
             $OKOM_MOREINFO_TEL = strval(Tools::getValue('OKOM_MOREINFO_TEL'));
-
             $OKOM_MOREINFO_TELH = array();
             $OKOM_MOREINFO_MESSAGE = array();
 
@@ -169,7 +168,7 @@ class okom_moreinfo extends Module
                 Configuration::updateValue('OKOM_MOREINFO_CAPTCHA', $OKOM_MOREINFO_CAPTCHA);
 
                 if (Configuration::updateValue('OKOM_MOREINFO_ACTIVATE', $OKOM_MOREINFO_ACTIVATE)) {
-                    if ($OKOM_MOREINFO_ACTIVATE == 1) {
+                    if (1 == $OKOM_MOREINFO_ACTIVATE) {
                         $this->registerHook('displayHeader');
                         $this->registerHook('displayLeftColumnProduct');
                         $this->registerHook('displayFooterProduct');
@@ -290,8 +289,6 @@ class okom_moreinfo extends Module
                     'desc' => $this->l('Phone number Hotline.'),
                     'name' => 'OKOM_MOREINFO_TEL',
                     'size' => 60,
-
-
                 ),
                 array(
 
@@ -336,7 +333,6 @@ class okom_moreinfo extends Module
         return $helper->generateForm($fields_form);
     }
 
-
     protected function getConfigFieldsValues()
     {
         $languages = Language::getLanguages(false);
@@ -358,11 +354,9 @@ class okom_moreinfo extends Module
             );
     }
 
-
-
     public function hookDisplayHeader($params)
     {
-        if (get_class($this->context->controller) == 'ProductController') {
+        if ('ProductController' == get_class($this->context->controller)) {
             if (version_compare(_PS_VERSION_, '1.6.0.0', '>=')) {
                 $this->context->controller->addCSS($this->_path.'views/css/okom_moreinfo.css', 'all');
             } else {
@@ -375,21 +369,17 @@ class okom_moreinfo extends Module
     }
 
 
-
     public function hookDisplayLeftColumnProduct($params)
     {
         $this->context->smarty->assign('id_product', (int)Tools::getValue('id_product'));
         return $this->display(__FILE__, 'views/templates/hooks/leftcolumnproduct.tpl');
     }
 
-
     public function hookDisplayFooterProduct($params)
     {
         $questions = $this->getQuestionById((int)Tools::getValue('id_product'));
 
-
         $this->context->smarty->assign(array(
-
                 'questions' => $questions ,
                 'nb_$questions ' => sizeof($questions),
                 'id_product' => (int)Tools::getValue('id_product')
@@ -401,7 +391,8 @@ class okom_moreinfo extends Module
 
     public function getQuestionById($id_product)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS(
+            '
 		        SELECT *
 		        FROM '._DB_PREFIX_.$this->table_name.' WHERE id_product = '.(int)$id_product.'
             AND active = 1 ORDER BY id_question DESC'
