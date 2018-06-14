@@ -1,0 +1,31 @@
+Module Poser une question sur un produit
+
+ - Ce module ajoute un formulaire sur les pages produits pour poser une question
+ - Il est compatible avec les versions 1.5 && 1.6 de prestashop
+ - Si vous avez le module faq by Eolia d'installé un lien automatique se crée vers la FAQ
+ - Il supporte le multilanguage
+ 
+Changelog :
+
+ V 1.5 
+ 
+	Ajout d'un captcha avec la class securimage -> https://www.phpcaptcha.org/
+ 
+ V 1.4 
+ 
+	Déplacement du chargement de la configuration dans getConfigFieldsValues()
+	Activer ou désactiver le lien vers la FAQ
+ 
+ V 1.3
+ 
+	Ajout d'un lien vers la FAQ si le module est installé (  FAQ by Eolia )
+	http://www.prestashop.com/forums/topic/306420-faq-module-for-prestashop-15-versions/
+ 
+ V 1.2 
+ 
+	Possibilité d'activer ou de désactiver le module
+	Compatible avec le theme 1.5 et 1.6 par défault
+ 
+ V 1.0 
+ 
+	Creation du module simple détournement du module better price par Math75

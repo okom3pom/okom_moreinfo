@@ -1,0 +1,126 @@
+#usefull_link_block li.moreinfo {
+    padding-left: 20px;
+    background: url('../img/question-16.png') no-repeat scroll 0px 0px transparent;
+}
+
+
+#moreinfo_form h2 {
+	padding:8px 11px;
+	font-size:12px;
+	color:#fff;
+	text-shadow:0 1px 0 #000;
+	text-transform:uppercase;
+	background:#383838;
+}
+
+#moreinfo_form .product {
+	margin:20px 10px;
+}
+
+#moreinfo_form .product img {
+	float:left;
+	margin:0 10px 0 0;
+	border:1px solid #ccc;
+}
+
+#moreinfo_form .product .product_desc {
+	float:left;
+	width:380px;
+}
+
+#moreinfo_form .product .product_desc p {
+	padding:0 10px 0 0;
+	color:#333;
+}
+
+#moreinfo_form .product .product_desc p.product_name {
+	font-size:12px;
+	color:#000;
+}
+
+#moreinfo_form .product .product_desc p.price_container {
+	margin:10px 0 0 0;
+	font-size:14px;
+	color:#000;
+}
+
+#moreinfo_form .moreinfo_form_content {
+	margin:0 10px 20px;
+}
+
+#moreinfo_form .moreinfo_form_container {
+	padding:10px 15px;
+	border:1px solid #ccc;
+	background:#eee;
+}
+
+#moreinfo_form .moreinfo_form_container .intro_form {
+	margin-bottom:14px;
+}
+
+#moreinfo_form .moreinfo_form_container p.txt_required {
+	padding-bottom:0;
+	color:#666;
+}
+
+#moreinfo_form .moreinfo_form_container .moreinfo_form {
+	padding-bottom:0px;
+}
+
+#moreinfo_form .moreinfo_form_container .moreinfo_form label {
+	
+	vertical-align:top;
+	padding:6px 15px;
+	width:200px;
+	font-size:12px;
+	
+}
+
+#moreinfo_form .moreinfo_form_container .moreinfo_form input {
+    	
+	padding:0 5px;
+	height:22px;
+	width:260px;
+	border:1px solid #ccc;
+	font-size:12px;
+	color:#666;
+}
+
+#moreinfo_form .moreinfo_form_container .moreinfo_form textarea {
+	padding:0 5px;
+	height:80px;
+	width:260px;
+	border:1px solid #ccc;
+	font-size:12px;
+	color:#666;
+}
+
+#moreinfo_form .moreinfo_form_content .moreinfo_waiting {
+	text-align:center;
+	display:none;
+	padding-bottom:10px;
+}
+
+#moreinfo_form .submit {
+	margin-top:20px;
+	padding-bottom:0;
+	text-align:right;
+}
+
+#moreinfo_form  .moreinfo_cancel {
+	background:none;
+	border:none;
+	cursor:pointer;
+}
+
+#moreinfo_form_error .errors {
+	padding:10px 10px 10px 30px;
+	margin-bottom:10px;
+	border:1px solid #990000;
+	background:#ffcccc;
+}
+#captcha_image {
+
+margin:5px 0px 5px 185px;
+
+}
