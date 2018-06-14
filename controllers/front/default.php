@@ -1,16 +1,43 @@
 <?php
 
-
+/*
+ * Module : Question on product for Prestashop 1.6.X
+ *
+ * MIT License
+ *
+ * Copyright (c) 2018
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ *
+ * @author    Okom3pom <contact@okom3pom.com>
+ * @copyright 2008-2018 Okom3pom
+ * @version   2.0.1
+ * @license   Free
+ */
 
 class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
 {
-    
-    
     public function setMedia()
     {
-        
         $module = 'okom_moreinfo';
-        parent::setMedia();        
+        parent::setMedia();
         $this->addJS(_MODULE_DIR_.$module.'/views/js/okom_moreinfo.js');
         $this->addCSS(_MODULE_DIR_.$module.'/views/css/okom_moreinfo.css');
         $this->context->controller->addJS(_PS_JS_DIR_.'validate.js');
@@ -101,7 +128,7 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
                         _PS_MODULE_DIR_.$this->module->name.'/mails/'
                     )
                                                         ) {
-                                                        $return['errors'][] = $this->module->l('Failed to send email');
+                        $return['errors'][] = $this->module->l('Failed to send email');
                     }
                 }
 
@@ -125,17 +152,17 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
             $module = 'okom_moreinfo';
             
                 
-                $faq_link = false;
+            $faq_link = false;
             if (Module::isEnabled('faq')  && Configuration::get('OKOM_MOREINFO_FAQ') == 1) {
-                    $url = (Configuration::get("PS_REWRITING_SETTINGS") == 1 && $this->getMeta()!= false) ? $this->getMeta():'index.php?fc=module&module=faq&controller=default';
-                    $faq_link =  __PS_BASE_URI__.$url;
+                $url = (Configuration::get("PS_REWRITING_SETTINGS") == 1 && $this->getMeta()!= false) ? $this->getMeta():'index.php?fc=module&module=faq&controller=default';
+                $faq_link =  __PS_BASE_URI__.$url;
             }
                 
                 
-                $phone_number = Configuration::get('OKOM_MOREINFO_TEL');
-                $schedule = Configuration::get('OKOM_MOREINFO_TELH', (int)$this->context->language->id);
+            $phone_number = Configuration::get('OKOM_MOREINFO_TEL');
+            $schedule = Configuration::get('OKOM_MOREINFO_TELH', (int)$this->context->language->id);
                 
-                $secure_image = false;
+            $secure_image = false;
                 
             if (Configuration::get('OKOM_MOREINFO_CAPTCHA') == 1) {
                 if (!class_exists('Securimage')) {
@@ -150,10 +177,10 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
                 $secure_image = Securimage::getCaptchaHtml($options);
             }
 
-                $question_product = new Product((int)Tools::getValue('id_product'), 1, 1);
+            $question_product = new Product((int)Tools::getValue('id_product'), 1, 1);
                 
         
-                $this->context->smarty->assign(array(
+            $this->context->smarty->assign(array(
                     'nobots' => true,
                     'nofollow' => true,
                     'module_dir' => _MODULE_DIR_.$module.'/',

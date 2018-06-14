@@ -54,6 +54,7 @@ $config = PhpCsFixer\Config::create()
         '@PHP56Migration' => true,
         '@PHPUnit60Migration:risky' => true,
         '@PSR2' => true,
+        'header_comment' => ['header' => $header],
     ])
     ->setFinder($finder)
 ;

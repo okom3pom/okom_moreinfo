@@ -1,16 +1,36 @@
 <?php
+
 /*
-*  
-*   http://okom3pom.com
-*   Module Ask question on product page for Prestashop 1.5 && 1.6
-* 
-*    
-*   Released under the GNU General Public License
-*
-*   Author Okom3pom.com -> Thomas Roux
-*   Version 2.0 -14/06/2016
-* 
-*/
+ * Module : Question on product for Prestashop 1.6.X
+ *
+ * MIT License
+ *
+ * Copyright (c) 2018
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ *
+ * @author    Okom3pom <contact@okom3pom.com>
+ * @copyright 2008-2018 Okom3pom
+ * @version   2.0.1
+ * @license   Free
+ */
 
 if (!defined('_CAN_LOAD_FILES_')) {
     exit;
@@ -21,10 +41,9 @@ require_once(_PS_MODULE_DIR_ .'okom_moreinfo/models/QuestionModel.php');
 
 class okom_moreinfo extends Module
 {
-    
     private $_html = '';
-    
-    
+
+
     public function __construct()
     {
         $this->name = 'okom_moreinfo';
@@ -35,7 +54,7 @@ class okom_moreinfo extends Module
         $this->generic_name = 'okom_moreinfo';
         $this->table_name = 'question';
         $this->display = 'view';
-        
+
         parent::__construct();
 
         $this->displayName = $this->l('More info from product');
@@ -48,19 +67,15 @@ class okom_moreinfo extends Module
             Shop::setContext(Shop::CONTEXT_ALL);
         }
 
-
-        
-            $id_lang = ($this->context->language->id) ? $this->context->language->id : _PS_LANG_DEFAULT_ ;
-            $tab = new Tab();
-            $tab->name[$id_lang ] = $this->l('Question on product');
-            $tab->class_name = 'Question';
-            $tab->id_parent = 0; // Home tab
-            $tab->module = $this->name;
-            $tab->add();
-
+        $id_lang = ($this->context->language->id) ? $this->context->language->id : _PS_LANG_DEFAULT_ ;
+        $tab = new Tab();
+        $tab->name[$id_lang ] = $this->l('Question on product');
+        $tab->class_name = 'Question';
+        $tab->id_parent = 0; // Home tab
+        $tab->module = $this->name;
+        $tab->add();
 
         return parent::install()
-
         && $this->registerHook('displayHeader')
         && $this->registerHook('displayLeftColumnProduct')
         && $this->registerHook('displayFooterProduct')
@@ -76,14 +91,12 @@ class okom_moreinfo extends Module
         && $this->_installTable();
     }
 
-    
+
     public function uninstall()
     {
-
-
         $tab = new Tab((int)Tab::getIdFromClassName('Question'));
-        
         $tab->delete();
+
         Configuration::deleteByName('OKOM_MOREINFO_ACTIVATE');
         Configuration::deleteByName('OKOM_MOREINFO_EMAIL');
         Configuration::deleteByName('OKOM_MOREINFO_MESSAGE');
@@ -124,25 +137,24 @@ class okom_moreinfo extends Module
             if (!$OKOM_MOREINFO_EMAIL  || empty($OKOM_MOREINFO_EMAIL) || !Validate::isEmail($OKOM_MOREINFO_EMAIL)) {
                 $output .= $this->displayError($this->l('Invalid email'));
             }
-                
+
             $OKOM_MOREINFO_ACTIVATE = intval(Tools::getValue('OKOM_MOREINFO_ACTIVATE'));
             $OKOM_MOREINFO_FAQ = intval(Tools::getValue('OKOM_MOREINFO_FAQ'));
             $OKOM_MOREINFO_CAPTCHA = intval(Tools::getValue('OKOM_MOREINFO_CAPTCHA'));
             $OKOM_MOREINFO_TEL = strval(Tools::getValue('OKOM_MOREINFO_TEL'));
-                
-            
+
             $OKOM_MOREINFO_TELH = array();
             $OKOM_MOREINFO_MESSAGE = array();
             $languages = Language::getLanguages();
             foreach ($languages as $language) {
                 $lang = (int)$language['id_lang'];
-                
+
                 $OKOM_MOREINFO_MESSAGE[$lang] = Tools::getValue('OKOM_MOREINFO_MESSAGE_'.$lang);
                 if (!Validate::isCleanHtml($OKOM_MOREINFO_MESSAGE[$lang])) {
                     $output  .= $this->displayError(sprintf($this->l('Invalid terms for %s'), $language['name']));
                     unset($OKOM_MOREINFO_MESSAGE[$lang]);
                 }
-                    
+
                 $OKOM_MOREINFO_TELH[$lang] = Tools::getValue('OKOM_MOREINFO_TELH_'.$lang);
                 if (!Validate::isCleanHtml($OKOM_MOREINFO_TELH[$lang])) {
                     $output  .= $this->displayError(sprintf($this->l('Invalid terms for %s'), $language['name']));
@@ -161,13 +173,13 @@ class okom_moreinfo extends Module
 
                 if (Configuration::updateValue('OKOM_MOREINFO_ACTIVATE', $OKOM_MOREINFO_ACTIVATE)) {
                     if ($OKOM_MOREINFO_ACTIVATE == 1) {
-                            $this->registerHook('displayHeader');
-                            $this->registerHook('displayLeftColumnProduct');
-                            $this->registerHook('displayFooterProduct');
+                        $this->registerHook('displayHeader');
+                        $this->registerHook('displayLeftColumnProduct');
+                        $this->registerHook('displayFooterProduct');
                     } else {
-                            $this->unregisterHook('displayHeader');
-                            $this->unregisterHook('displayLeftColumnProduct');
-                            $this->unregisterHook('displayFooterProduct');
+                        $this->unregisterHook('displayHeader');
+                        $this->unregisterHook('displayLeftColumnProduct');
+                        $this->unregisterHook('displayFooterProduct');
                     }
                 }
                 Configuration::updateValue('OKOM_MOREINFO_EMAIL', $OKOM_MOREINFO_EMAIL);
@@ -179,13 +191,10 @@ class okom_moreinfo extends Module
 
     public function renderForm()
     {
-        
         $radio = 'switch';
         $icon = 'icon-cogs';
         $class = '';
         $type = 'icon';
-        
-
 
         if (version_compare(_PS_VERSION_, '1.6.0.0', '<')) {
             $radio = 'radio';
@@ -193,19 +202,13 @@ class okom_moreinfo extends Module
             $class = 't';
             $type = 'image';
         }
-        
-                    
 
-            $fields_form[0]['form'] = array(
+        $fields_form[0]['form'] = array(
             'legend' => array(
                 'title' => $this->l('Settings'),
                 '$type' => $icon
             ),
-            
-            
-            
             'input' => array(
-            
                 array(
                     'name' => 'OKOM_MOREINFO_ACTIVATE',
                     'type' => $radio,
@@ -226,7 +229,6 @@ class okom_moreinfo extends Module
                             )
                         )
                     ),
-                    
                 array(
                     'name' => 'OKOM_MOREINFO_CAPTCHA',
                     'type' => $radio,
@@ -247,7 +249,6 @@ class okom_moreinfo extends Module
                             )
                         )
                     ),
-
                 array(
                     'name' => 'OKOM_MOREINFO_FAQ',
                     'type' => $radio,
@@ -268,8 +269,6 @@ class okom_moreinfo extends Module
                             )
                         )
                     ),
-            
-
             array(
                     'type' => 'textarea',
                     'label' => $this->l('Message'),
@@ -279,8 +278,6 @@ class okom_moreinfo extends Module
                     'rows' => 10,
                     'cols' => 100,
                     'name' => 'OKOM_MOREINFO_MESSAGE',
-
-
                 ),
                 array(
                     'type' => 'text',
@@ -310,19 +307,17 @@ class okom_moreinfo extends Module
                     'cols' => 100,
                     'name' => 'OKOM_MOREINFO_TELH',
                 )
-                
-                
             ),
             'submit' => array(
                 'title' => $this->l('Save'),
             )
         );
-        
+
         $languages = Language::getLanguages(false);
         foreach ($languages as $k => $language) {
             $languages[$k]['is_default'] = (int)$language['id_lang'] == Configuration::get('PS_LANG_DEFAULT');
         }
-        
+
 
         $helper = new HelperForm();
         $helper->module = $this;
@@ -343,8 +338,8 @@ class okom_moreinfo extends Module
 
         return $helper->generateForm($fields_form);
     }
-    
-    
+
+
     protected function getConfigFieldsValues()
     {
         $languages = Language::getLanguages(false);
@@ -354,8 +349,8 @@ class okom_moreinfo extends Module
             $fields['OKOM_MOREINFO_MESSAGE'][$lang['id_lang']] = strval(Tools::getValue('OKOM_MOREINFO_MESSAGE_'.$lang['id_lang'], Configuration::get('OKOM_MOREINFO_MESSAGE', $lang['id_lang'])));
             $fields['OKOM_MOREINFO_TELH'][$lang['id_lang']] = strval(Tools::getValue('OKOM_MOREINFO_TELH_'.$lang['id_lang'], Configuration::get('OKOM_MOREINFO_TELH', $lang['id_lang'])));
         }
-        
-            return array(
+
+        return array(
                 'OKOM_MOREINFO_MESSAGE' => $fields['OKOM_MOREINFO_MESSAGE'],
                 'OKOM_MOREINFO_FAQ' => Tools::getValue('OKOM_MOREINFO_FAQ', Configuration::get('OKOM_MOREINFO_FAQ')),
                 'OKOM_MOREINFO_ACTIVATE' => Tools::getValue('OKOM_MOREINFO_ACTIVATE', Configuration::get('OKOM_MOREINFO_ACTIVATE')),
@@ -365,9 +360,9 @@ class okom_moreinfo extends Module
                 'OKOM_MOREINFO_TELH' => $fields['OKOM_MOREINFO_TELH']
             );
     }
-    
-    
-    
+
+
+
     public function hookDisplayHeader($params)
     {
         if (get_class($this->context->controller) == 'ProductController') {
@@ -376,17 +371,16 @@ class okom_moreinfo extends Module
             } else {
                 $this->context->controller->addCSS($this->_path.'views/css/okom_moreinfo15.css', 'all');
             }
-            
-                $this->context->controller->addJS($this->_path.'views/js/okom_moreinfo.js');
-                $this->context->controller->addJS(_PS_JS_DIR_.'validate.js');
+
+            $this->context->controller->addJS($this->_path.'views/js/okom_moreinfo.js');
+            $this->context->controller->addJS(_PS_JS_DIR_.'validate.js');
         }
     }
-        
 
-    
+
+
     public function hookDisplayLeftColumnProduct($params)
     {
-        
         $this->context->smarty->assign('id_product', (int)Tools::getValue('id_product'));
         return $this->display(__FILE__, 'views/templates/hooks/leftcolumnproduct.tpl');
     }
@@ -394,7 +388,6 @@ class okom_moreinfo extends Module
 
     public function hookDisplayFooterProduct($params)
     {
-
         $questions = $this->getQuestionById((int)Tools::getValue('id_product'));
 
 
@@ -429,7 +422,6 @@ class okom_moreinfo extends Module
 
     public function hookRegisterGDPRConsent($param)
     {
-
         return;
     }
 }
