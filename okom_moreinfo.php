@@ -38,11 +38,9 @@ if (!defined('_CAN_LOAD_FILES_')) {
 
 require_once(_PS_MODULE_DIR_ .'okom_moreinfo/models/QuestionModel.php');
 
-
 class okom_moreinfo extends Module
 {
     private $_html = '';
-
 
     public function __construct()
     {
@@ -54,9 +52,7 @@ class okom_moreinfo extends Module
         $this->generic_name = 'okom_moreinfo';
         $this->table_name = 'question';
         $this->display = 'view';
-
         parent::__construct();
-
         $this->displayName = $this->l('More info from product');
         $this->description = $this->l('Customer ask a question on product page');
     }
@@ -96,7 +92,6 @@ class okom_moreinfo extends Module
     {
         $tab = new Tab((int)Tab::getIdFromClassName('Question'));
         $tab->delete();
-
         Configuration::deleteByName('OKOM_MOREINFO_ACTIVATE');
         Configuration::deleteByName('OKOM_MOREINFO_EMAIL');
         Configuration::deleteByName('OKOM_MOREINFO_MESSAGE');
@@ -112,7 +107,7 @@ class okom_moreinfo extends Module
         $sql = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.$this->table_name.'` (
 				`id_question` INT( 12 ) NOT NULL AUTO_INCREMENT,
 				`id_product` INT (12) NOT NULL ,
-                `name` VARCHAR (64) NOT NULL ,
+        `name` VARCHAR (64) NOT NULL ,
 				`email` VARCHAR (64) NOT NULL ,
 				`question` TEXT NOT NULL ,
 				`answer` TEXT NOT NULL ,
@@ -145,7 +140,9 @@ class okom_moreinfo extends Module
 
             $OKOM_MOREINFO_TELH = array();
             $OKOM_MOREINFO_MESSAGE = array();
+
             $languages = Language::getLanguages();
+
             foreach ($languages as $language) {
                 $lang = (int)$language['id_lang'];
 
@@ -228,7 +225,7 @@ class okom_moreinfo extends Module
                             'label' => $this->l('Disabled')
                             )
                         )
-                    ),
+                ),
                 array(
                     'name' => 'OKOM_MOREINFO_CAPTCHA',
                     'type' => $radio,
@@ -248,7 +245,7 @@ class okom_moreinfo extends Module
                             'label' => $this->l('Disabled')
                             )
                         )
-                    ),
+                ),
                 array(
                     'name' => 'OKOM_MOREINFO_FAQ',
                     'type' => $radio,
@@ -268,8 +265,8 @@ class okom_moreinfo extends Module
                             'label' => $this->l('Disabled')
                             )
                         )
-                    ),
-            array(
+                ),
+                array(
                     'type' => 'textarea',
                     'label' => $this->l('Message'),
                     'desc' => $this->l('Message on fancybox. Ex : please read faq befor ask a question !'),
@@ -405,8 +402,10 @@ class okom_moreinfo extends Module
     public function getQuestionById($id_product)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
-			SELECT *
-			FROM '._DB_PREFIX_.$this->table_name.' WHERE id_product = '.(int)$id_product.' AND active = 1 ORDER BY id_question DESC');
+		        SELECT *
+		        FROM '._DB_PREFIX_.$this->table_name.' WHERE id_product = '.(int)$id_product.'
+            AND active = 1 ORDER BY id_question DESC'
+        );
     }
 
     public function hookActionExportGDPRData($customer)
