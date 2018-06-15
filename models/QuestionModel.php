@@ -43,18 +43,18 @@ class QuestionModel extends ObjectModel
     public $active;
     public $date_add;
 
-    public static $definition = array(
+    public static $definition = [
         'table' => 'question',
         'primary' => 'id_question',
-        'fields' => array(
-            'id_question' => array('type' => self::TYPE_INT,'validate' => 'isUnsignedInt'),
-            'id_product' =>  array('type' => self::TYPE_INT,'validate' => 'isInt'),
-            'name' => 		 array('type' => self::TYPE_STRING,'validate' => 'isGenericName'),
-            'email' => 		 array('type' => self::TYPE_STRING,'validate' => 'isEmail'),
-            'question' => 	 array('type' => self::TYPE_HTML,'validate' => 'isCleanHtml'),
-            'answer' => 	 array('type' => self::TYPE_HTML,'validate' => 'isCleanHtml'),
-            'active' => 	 array('type' => self::TYPE_INT,'validate' => 'isInt'),
-            'date_add' => 	 array('type' => self::TYPE_DATE,'validate' => 'isDateFormat'),
-        ),
-    );
+        'fields' => [
+            'id_question' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName'],
+            'email' => ['type' => self::TYPE_STRING, 'validate' => 'isEmail'],
+            'question' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'],
+            'answer' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml'],
+            'active' => ['type' => self::TYPE_INT, 'validate' => 'isInt'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDateFormat'],
+        ],
+    ];
 }

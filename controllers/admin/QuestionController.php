@@ -41,7 +41,7 @@ class QuestionController extends ModuleAdminController
         $this->lang = false;
         $this->deleted = false;
         $this->colorOnBackground = false;
-        $this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+        $this->bulk_actions = ['delete' => ['text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')]];
         $this->context = Context::getContext();
 
         if (_PS_VERSION_ >= 1.6) {
@@ -51,115 +51,108 @@ class QuestionController extends ModuleAdminController
         parent::__construct();
     }
 
-    /*
-    * Function used to render the list to display for this controller
-    *
-    *
-    */
+    // Function used to render the list to display for this controller
     public function renderList()
     {
         $this->addRowAction('edit');
         $this->addRowAction('delete');
         //$this->addRowAction('details');
 
-        $this->bulk_actions = array(
-            'delete' => array(
+        $this->bulk_actions = [
+            'delete' => [
                 'text' => $this->l('Delete selected'),
-                'confirm' => $this->l('Delete selected items?')
-                )
-            );
+                'confirm' => $this->l('Delete selected items?'),
+            ],
+        ];
 
-        $this->fields_list = array(
-            'id_question' => array(
+        $this->fields_list = [
+            'id_question' => [
                 'title' => $this->l('ID'),
                 'align' => 'center',
-                'width' => 25
-            ),
-            'id_product' => array(
+                'width' => 25,
+            ],
+            'id_product' => [
                 'title' => $this->l('ID Product'),
                 'align' => 'center',
-                'width' => 25
-            ),
-            'question' => array(
+                'width' => 25,
+            ],
+            'question' => [
                 'title' => $this->l('Question'),
                 'width' => 'auto',
-            ),
-            'answer' => array(
+            ],
+            'answer' => [
                 'title' => $this->l('Answer'),
                 'width' => 'auto',
-            ),
-            'active' => array(
+            ],
+            'active' => [
                 'title' => $this->l('Activated'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
                 'active' => 'status',
                 'type' => 'bool',
-                'orderby' => false
-            )
-        );
+                'orderby' => false,
+            ],
+        ];
 
-        $lists = parent::renderList();
+        return parent::renderList();
         //$this->initToolbar();
-        return $lists;
     }
 
     public function renderForm()
     {
-        $this->fields_form = array(
+        $this->fields_form = [
             'tinymce' => true,
-            'legend' => array(
+            'legend' => [
                 'title' => $this->l('News'),
-                'image' => '../img/admin/edit.gif'
-            ),
-            'input' => array(
-                array(
+                'image' => '../img/admin/edit.gif',
+            ],
+            'input' => [
+                [
                     'type' => 'textarea',
                     //'lang' => true,
                     'label' => $this->l('Title:'),
                     'name' => 'question',
                     'autoload_rte' => true,
-                ),
-                array(
+                ],
+                [
                     'type' => 'textarea',
                     //'lang' => true,
                     'label' => $this->l('Title:'),
                     'name' => 'answer',
                     'autoload_rte' => true,
-                ),
-
-            ),
-            'submit' => array(
+                ],
+            ],
+            'submit' => [
                 'title' => $this->l('Save'),
-                'class' => 'btn btn-default pull-right'
-            )
-        );
+                'class' => 'btn btn-default pull-right',
+            ],
+        ];
 
         if (!($obj = $this->loadObject(true))) {
             return;
         }
 
-
         $this->initToolbar();
+
         return $this->write_html().parent::renderForm();
     }
 
     public function initToolbar()
     {
         parent::initToolbar();
-        if ('edit' == $this->display || 'add' == $this->display) {
-            $this->toolbar_btn['save'] = array(
+        if ('edit' === $this->display || 'add' === $this->display) {
+            $this->toolbar_btn['save'] = [
                 'short' => 'Save',
                 'href' => '#',
                 'desc' => $this->l('Save'),
-            );
+            ];
 
-            $this->toolbar_btn['save-and-stay'] = array(
+            $this->toolbar_btn['save-and-stay'] = [
                 'short' => 'SaveAndStay',
                 'href' => '#',
                 'desc' => $this->l('Save and stay'),
-            );
+            ];
         }
-
 
         $this->context->smarty->assign('toolbar_scroll', 1);
         $this->context->smarty->assign('show_toolbar', 1);
@@ -168,26 +161,20 @@ class QuestionController extends ModuleAdminController
 
     protected function write_html()
     {
-        $question = new QuestionModel((int)Tools::getValue('id_question'));
-
+        $question = new QuestionModel((int) Tools::getValue('id_question'));
 
         $html = '';
         $html .= '
-
-	<div class="panel" id="fieldset_5">
-		<div class="panel-heading">
-				<i class="icon-file-pdf-o"></i>
-				Question sur un article	</div>
-
-
-			<div class="margin-form">
-
-			<a href="?controller=AdminProducts&id_product='.$question->id_product.'&updateproduct&token='.Tools::getAdminTokenLite('AdminProducts').'">Voir l\'article BO</a> ---
-
-			<a href="../index.php?controller=Product&id_product='.$question->id_product.'">Voir l\'article FO</a>
-
-			</div>
-			</fieldset></form></div>';
+	        <div class="panel" id="fieldset_5">
+		         <div class="panel-heading">
+				        <i class="icon-file-pdf-o"></i> Question sur un article
+             </div>
+             <div class="margin-form">
+                 <a href="?controller=AdminProducts&id_product='.$question->id_product.'&updateproduct&token='.Tools::getAdminTokenLite('AdminProducts').'">Voir l\'article BO</a> ---
+                 <a href="../index.php?controller=Product&id_product='.$question->id_product.'">Voir l\'article FO</a>
+             </div>
+			    </div>
+        ';
 
         return $html;
     }

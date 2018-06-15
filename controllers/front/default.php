@@ -49,45 +49,45 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
 
         $module_instance = new okom_moreinfo();
         if (Tools::isSubmit('sendEmail')) {
-            $return = array();
+            $return = [];
 
-            $moreinfo_firstname = strval(Tools::getValue('moreinfo_firstname'));
-            if (!$moreinfo_firstname  || empty($moreinfo_firstname) || !Validate::isName($moreinfo_firstname)) {
+            $moreinfo_firstname = (string) (Tools::getValue('moreinfo_firstname'));
+            if (!$moreinfo_firstname || empty($moreinfo_firstname) || !Validate::isName($moreinfo_firstname)) {
                 $return['errors'][] = $module_instance->l('Invalid firstname', 'default');
             }
 
-            $moreinfo_email = strval(Tools::getValue('moreinfo_email'));
+            $moreinfo_email = (string) (Tools::getValue('moreinfo_email'));
             if (!Validate::isEmail($moreinfo_email)) {
                 $return['errors'][] = $module_instance->l('Invalid email', 'default');
             }
 
-            $moreinfo_question = strval(Tools::getValue('moreinfo_question'));
-            if (!$moreinfo_question  || empty($moreinfo_question) || !Validate::isMessage($moreinfo_question)) {
+            $moreinfo_question = (string) (Tools::getValue('moreinfo_question'));
+            if (!$moreinfo_question || empty($moreinfo_question) || !Validate::isMessage($moreinfo_question)) {
                 $return['errors'][] = $module_instance->l('Invalid question', 'default');
             }
 
-            $moreinfo_product = strval(Tools::getValue('moreinfo_product'));
-            if (!$moreinfo_product  || empty($moreinfo_product) || !Validate::isUnsignedId($moreinfo_product)) {
+            $moreinfo_product = (string) (Tools::getValue('moreinfo_product'));
+            if (!$moreinfo_product || empty($moreinfo_product) || !Validate::isUnsignedId($moreinfo_product)) {
                 $return['errors'][] = $module_instance->l('Invalid product id', 'default');
             }
 
             //Check if Captcha is enabled
-            if (1 == Configuration::get('OKOM_MOREINFO_CAPTCHA')) {
-                $moreinfo_captcha = strval(Tools::getValue('ct_captcha'));
+            if (1 === Configuration::get('OKOM_MOREINFO_CAPTCHA')) {
+                $moreinfo_captcha = (string) (Tools::getValue('ct_captcha'));
 
                 if (!class_exists('Securimage')) {
-                    require_once dirname(__FILE__) . '/../../securimage/securimage.php';
+                    require_once __DIR__.'/../../securimage/securimage.php';
                 }
                 $securimage = new Securimage();
 
-                if (false == $securimage->check($moreinfo_captcha)) {
+                if (false === $securimage->check($moreinfo_captcha)) {
                     $return['errors'][] = $module_instance->l('Incorrect security code entered', 'default');
                 }
             }
 
-            $id_lang = (int)$this->context->language->id;
+            $id_lang = (int) $this->context->language->id;
             $iso = Language::getIsoById($id_lang);
-            $product = new Product((int)$moreinfo_product, false, $id_lang);
+            $product = new Product((int) $moreinfo_product, false, $id_lang);
             if (!Validate::isLoadedObject($product)) {
                 $return['errors'][] = $module_instance->l('Invalid product id', 'default');
             }
@@ -95,21 +95,21 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
             if (!isset($return['errors'])) {
                 $link = new Link();
 
-                $templateVars = array(
+                $templateVars = [
                     '{product}' => (is_array($product->name) ? $product->name[$id_lang] : $product->name),
                     '{product_link}' => $link->getProductLink($product),
                     '{firstname}' => $moreinfo_firstname,
                     '{email}' => $moreinfo_email,
-                    '{message}' => Tools::nl2br($moreinfo_question)
-                );
+                    '{message}' => Tools::nl2br($moreinfo_question),
+                ];
 
                 if (file_exists(_PS_MODULE_DIR_.$this->module->name.'/mails/'.$iso.'/moreinfo.txt') && file_exists(_PS_MODULE_DIR_.$this->module->name.'/mails/'.$iso.'/moreinfo.html')) {
                     if (!Mail::Send(
-                        (int)Configuration::get('PS_LANG_DEFAULT'),
+                        (int) Configuration::get('PS_LANG_DEFAULT'),
                         'moreinfo',
                         Mail::l('Question for a product', $id_lang),
                         $templateVars,
-                        strval(Configuration::get('OKOM_MOREINFO_EMAIL')),
+                        (string) (Configuration::get('OKOM_MOREINFO_EMAIL')),
                         null,
                         $moreinfo_email,
                         $moreinfo_firstname,
@@ -124,7 +124,7 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
 
                 $question = new QuestionModel();
                 $question->question = pSQL($moreinfo_question);
-                $question->id_product = (int)$product->id;
+                $question->id_product = (int) $product->id;
                 $question->email = pSQL($moreinfo_email);
                 $question->name = pSQL($moreinfo_firstname);
                 $question->approved = 0;
@@ -137,57 +137,52 @@ class okom_moreinfoDefaultModuleFrontController extends ModuleFrontController
             $return['success'] = (isset($return['errors'])) ? false : $succes;
 
             die(json_encode($return));
-        } else {
-            $module = 'okom_moreinfo';
-
-
-            $faq_link = false;
-            if (Module::isEnabled('faq')  && 1 == Configuration::get('OKOM_MOREINFO_FAQ')) {
-                $url = (1 == Configuration::get("PS_REWRITING_SETTINGS") && false!= $this->getMeta()) ? $this->getMeta():'index.php?fc=module&module=faq&controller=default';
-                $faq_link =  __PS_BASE_URI__.$url;
-            }
-
-
-            $phone_number = Configuration::get('OKOM_MOREINFO_TEL');
-            $schedule = Configuration::get('OKOM_MOREINFO_TELH', (int)$this->context->language->id);
-
-            $secure_image = false;
-
-            if (1 == Configuration::get('OKOM_MOREINFO_CAPTCHA')) {
-                if (!class_exists('Securimage')) {
-                    require_once dirname(__FILE__) . '/../../securimage/securimage.php';
-                }
-
-                $options = array();
-                $options['image_id'] = 'moreinfo_captcha';
-                $options['input_name'] = 'ct_captcha';
-                $options['input_class'] = 'form-control grey';
-                $options['input_text'] = $module_instance->l('Enter secure code', 'default');
-                $secure_image = Securimage::getCaptchaHtml($options);
-            }
-
-            $question_product = new Product((int)Tools::getValue('id_product'), 1, 1);
-
-
-            $this->context->smarty->assign(array(
-                    'nobots' => true,
-                    'nofollow' => true,
-                    'module_dir' => _MODULE_DIR_.$module.'/',
-                    'product' => $question_product,
-                    'cover' => Product::getCover((int)Tools::getValue('id_product')),
-                    'message' => Configuration::get('OKOM_MOREINFO_MESSAGE', (int)$this->context->language->id),
-                    'faq_link' => $faq_link ,
-                    'secure_image' => $secure_image,
-                    'phone_number' => $phone_number ,
-                    'schedule' =>  $schedule,
-                    'id_module' => $module_instance->id,
-                    'fileupload' => Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD'),
-                    'customer' => $this->context->customer
-                ));
-
-
-            $this->setTemplate('productfooter.tpl');
         }
+        $module = 'okom_moreinfo';
+
+        $faq_link = false;
+        if (Module::isEnabled('faq') && 1 === Configuration::get('OKOM_MOREINFO_FAQ')) {
+            $url = (1 === Configuration::get('PS_REWRITING_SETTINGS') && false !== $this->getMeta()) ? $this->getMeta() : 'index.php?fc=module&module=faq&controller=default';
+            $faq_link = __PS_BASE_URI__.$url;
+        }
+
+        $phone_number = Configuration::get('OKOM_MOREINFO_TEL');
+        $schedule = Configuration::get('OKOM_MOREINFO_TELH', (int) $this->context->language->id);
+
+        $secure_image = false;
+
+        if (1 === Configuration::get('OKOM_MOREINFO_CAPTCHA')) {
+            if (!class_exists('Securimage')) {
+                require_once __DIR__.'/../../securimage/securimage.php';
+            }
+
+            $options = [];
+            $options['image_id'] = 'moreinfo_captcha';
+            $options['input_name'] = 'ct_captcha';
+            $options['input_class'] = 'form-control grey';
+            $options['input_text'] = $module_instance->l('Enter secure code', 'default');
+            $secure_image = Securimage::getCaptchaHtml($options);
+        }
+
+        $question_product = new Product((int) Tools::getValue('id_product'), 1, 1);
+
+        $this->context->smarty->assign([
+            'nobots' => true,
+            'nofollow' => true,
+            'module_dir' => _MODULE_DIR_.$module.'/',
+            'product' => $question_product,
+            'cover' => Product::getCover((int) Tools::getValue('id_product')),
+            'message' => Configuration::get('OKOM_MOREINFO_MESSAGE', (int) $this->context->language->id),
+            'faq_link' => $faq_link,
+            'secure_image' => $secure_image,
+            'phone_number' => $phone_number,
+            'schedule' => $schedule,
+            'id_module' => $module_instance->id,
+            'fileupload' => Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD'),
+            'customer' => $this->context->customer,
+        ]);
+
+        $this->setTemplate('productfooter.tpl');
     }
 
     private function getMeta()

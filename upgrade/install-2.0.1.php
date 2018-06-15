@@ -38,5 +38,6 @@ function upgrade_module_2_0_1($object)
     if (!$object->isRegisteredInHook('registerGDPRConsent')) {
         $object->registerHook('registerGDPRConsent');
     }
+
     return $success;
 }
